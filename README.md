@@ -1,2 +1,7 @@
 # smart_and_healthy_buildings
-Class repo for CS 6501- S&amp;HB
+
+### G. Michael Fitzgerald (gmf5de)
+
+* Cookie Monster
+* Scissors
+* Regular Human
