@@ -87,16 +87,28 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
 
     print('Exporting heatmap to image...')
     plt.savefig(export_path)
+    plt.clf()
     print('Done!')
 
 def deliverable(fields):
     from datetime import datetime
-    start_datetime= datetime(2021,1,1) # start datetime
-    end_datetime= datetime(2021,9,23) # end datetime
+    start_datetime = datetime(2021,1,1) # start datetime
+    end_datetime = datetime(2021,9,23) # end datetime
     generate_linklab_heatmap(start_datetime, end_datetime, fields, 'annual_aggregate.png')
 
-def extra_credit():
-    pass
+def extra_credit(fields):
+    from datetime import datetime
+    from datetime import timedelta
+    frame = 0
+    now = datetime.now()
+    start_datetime = datetime(2021, 1, 1)
+    end_datetime = datetime(2021, 1, 2)
+
+    while end_datetime < now:
+        generate_linklab_heatmap(start_datetime, end_datetime, fields, f'img/frame_{frame}.png')
+        start_datetime += timedelta(days=1)
+        end_datetime += timedelta(days=1)
+        frame += 1
 
 def main():
     all_fields = [
@@ -118,7 +130,8 @@ def main():
         # 'pm2.5_μg/m3',
         # 'voc_ppb'
     ]
-    deliverable(all_fields)
+    # deliverable(all_fields)
+    extra_credit(all_fields)
 
 if __name__ == '__main__':
     main()
