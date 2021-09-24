@@ -9,24 +9,20 @@ def suppress_stdout_stderr():
         with redirect_stderr(fnull) as err, redirect_stdout(fnull) as out:
             yield (err, out)
 
-def grid_num_to_coord(grid):
-    letters = 'ABCDEFGHIJKLMNOPQRST'
-    # return (letter, number)
-    # return (column, row)
-    return ()
-
-
 # Create a heat map for each grid point in the link lab
 # if successful, return filepath of image
 # on error, return none
 def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
-    # get sensor information
     fields_set = set(fields)
+
+    # get sensor information
+    print('Reading in sensor registration information...')
     import pandas as pd
     df = pd.read_csv('book_with_grids.csv')
 
     # grid range 0-199
     import utility as util
+    from time import sleep
     datapoints = [
         [0] * 20,
         [0] * 20,
@@ -39,29 +35,36 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
         [0] * 20,
         [0] * 20
     ]
+
+    print('Iterating across the grid to gather data points...')
     for grid in range(200):
+        print(f'[GRID {grid}]')
         sensors_in_grid = df[df['grid'] == grid]
 
         # for each sensor in the grid
         dps = 0
         for row_id, sensor in sensors_in_grid.iterrows():
+            print(f'\tsensor {row_id}')
             sensor_fields = sensor['fields'].split(',')
             device_id_list = [sensor['device_id']]
+            # print(sensor_fields)
+            # print(fields)
             relevant_fields = list(set(sensor_fields).intersection(fields_set))
+            # print(relevant_fields)
             for field in relevant_fields:
+                print(f'\t\t{field}')
                 with suppress_stdout_stderr():
                     ldf = util.get_lfdf(field, start_datetime, end_datetime, device_id_list)
                 if ldf is not None:
                     dps += ldf.shape[0]
+                else:
+                    print('\t\t\tNo data in time range.')
                 # dps += len(ldf) ??
         datapoints[int(grid / 20)][grid % 20] = dps
-
     print(datapoints)
+
+    print('Plotting data on the heatmap...')
     import seaborn as sns
-    # img = mpimg.imread('grid.png')
-    # plt.figure(img)
-
-
     import matplotlib.pyplot as plt
     with suppress_stdout_stderr():
         import cv2
@@ -81,10 +84,41 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
             zorder=1,
         )
         plt.xticks(range(20), list("ABCDEFGHIJKLMNOPQRST"))
+
+    print('Exporting heatmap to image...')
     plt.savefig(export_path)
+    print('Done!')
 
+def deliverable(fields):
+    from datetime import datetime
+    start_datetime= datetime(2021,1,1) # start datetime
+    end_datetime= datetime(2021,9,23) # end datetime
+    generate_linklab_heatmap(start_datetime, end_datetime, fields, 'annual_aggregate.png')
 
-from datetime import datetime
-start_datetime= datetime(2021,9,22) # start datetime
-end_datetime= datetime(2021,9,23) # end datetime
-generate_linklab_heatmap(start_datetime, end_datetime, ['Illumination_lx'], 'img/heatmap.png')
+def extra_credit():
+    pass
+
+def main():
+    all_fields = [
+        # 'Concentration_ppm',
+        # 'H-Sensor',
+        'Humidity_%',
+        # 'T-Sensor',
+        'Temperature_°C',
+        # 'rssi',
+        # 'PIR Status',
+        # 'Supply voltage (OPTIONAL)_V',
+        # 'Supply voltage availability',
+        'Illumination_lx',
+        # 'Range select',
+        # 'Supply voltage_V',
+        # 'Contact',
+        # 'awair_score',
+        # 'co2_ppm',
+        # 'pm2.5_μg/m3',
+        # 'voc_ppb'
+    ]
+    deliverable(all_fields)
+
+if __name__ == '__main__':
+    main()
