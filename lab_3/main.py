@@ -1,6 +1,12 @@
 
 from contextlib import contextmanager,redirect_stderr,redirect_stdout
 from os import devnull
+import cv2
+import pandas as pd
+import utility as util
+from time import sleep
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 @contextmanager
 def suppress_stdout_stderr():
@@ -17,12 +23,9 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
 
     # get sensor information
     print('Reading in sensor registration information...')
-    import pandas as pd
     df = pd.read_csv('book_with_grids.csv')
 
     # grid range 0-199
-    import utility as util
-    from time import sleep
     datapoints = [
         [0] * 20,
         [0] * 20,
@@ -62,14 +65,13 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
                 # dps += len(ldf) ??
         datapoints[int(grid / 20)][grid % 20] = dps
     print(datapoints)
+    dpi_scale_trans = plt.figure().dpi_scale_trans
+    plt.clf()
 
     print('Plotting data on the heatmap...')
-    import seaborn as sns
-    import matplotlib.pyplot as plt
     with suppress_stdout_stderr():
-        import cv2
         img = cv2.imread('grid.png')
-        colors = sns.color_palette("Reds", 18)
+        colors = sns.color_palette("light:#F00", 24, as_cmap=True)
         heatmap = sns.heatmap(
             data=datapoints,
             square=True,
@@ -89,6 +91,7 @@ def generate_linklab_heatmap(start_datetime, end_datetime, fields, export_path):
     plt.savefig(export_path)
     plt.clf()
     print('Done!')
+    return export_path
 
 def deliverable(fields):
     from datetime import datetime
@@ -112,25 +115,25 @@ def extra_credit(fields):
 
 def main():
     all_fields = [
-        # 'Concentration_ppm',
+        'Concentration_ppm',
         # 'H-Sensor',
         'Humidity_%',
         # 'T-Sensor',
         'Temperature_°C',
         # 'rssi',
         # 'PIR Status',
-        # 'Supply voltage (OPTIONAL)_V',
+        'Supply voltage (OPTIONAL)_V',
         # 'Supply voltage availability',
         'Illumination_lx',
         # 'Range select',
-        # 'Supply voltage_V',
+        'Supply voltage_V',
         # 'Contact',
         # 'awair_score',
-        # 'co2_ppm',
-        # 'pm2.5_μg/m3',
-        # 'voc_ppb'
+        'co2_ppm',
+        'pm2.5_μg/m3',
+        'voc_ppb'
     ]
-    # deliverable(all_fields)
+    # deliverable(all_fields) # warning: takes a long time to run
     extra_credit(all_fields)
 
 if __name__ == '__main__':
