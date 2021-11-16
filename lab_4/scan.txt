@@ -1,0 +1,23 @@
+<Address 67:b1:1b:1c:c6:ea> <Advertisement tx_power=7 flags=<AdvertisingFlags general_discovery > >
+        Advertisement(data=b"\x02\x01\x1a\x02\x0a\x07\x0b\xff\x4c\x00\x10\x06\x20\x1a\xf4\xbd\x23\x4f")
+
+<Address 19:2c:e0:e4:2e:78> <ProvideServicesAdvertisement services=<BoundServiceList: UUID(0xfd6f)> >
+        Advertisement(data=b"\x17\x16\x6f\xfd\xb3\xe5\x77\x91\x5e\x22\x42\x99\xb4\x27\x92\xb8\xa0\x5d\x1e\x35\x82\x41\x9f\x16\x03\x03\x6f\xfd")
+
+<Address e9:40:a0:d0:59:a9> <ProvideServicesAdvertisement services=<BoundServiceList: UUID(0xfe0f)> flags=<AdvertisingFlags general_discovery le_only > >
+        Advertisement(data=b"\x02\x01\x06\x03\x02\x0f\xfe\x08\x16\x0f\xfe\x02\x10\xff\xff\x02")
+
+<Address e9:40:a0:d0:59:a9> <Advertisement tx_power=10 complete_name=Hue Light 1 >
+        Advertisement(data=b"\x02\x0a\x0a\x0c\x09\x48\x75\x65\x20\x4c\x69\x67\x68\x74\x20\x31")
+
+<Address 64:78:2d:56:d8:e2> <Advertisement tx_power=12 flags=<AdvertisingFlags general_discovery > >
+        Advertisement(data=b"\x02\x01\x1a\x02\x0a\x0c\x0a\xff\x4c\x00\x10\x05\x09\x18\xe7\x95\x3e")
+
+<Address e9:a0:d0:d9:69:00> <ProvideServicesAdvertisement services=<BoundServiceList: UUID(0xfe0f)> flags=<AdvertisingFlags general_discovery le_only > >
+        Advertisement(data=b"\x02\x01\x06\x03\x02\x0f\xfe\x08\x16\x0f\xfe\x02\x10\xff\xff\x02")
+
+<Address e9:a0:d0:d9:69:00> <Advertisement tx_power=10 complete_name=Hue bulb >
+        Advertisement(data=b"\x02\x0a\x0a\x09\x09\x48\x75\x65\x20\x62\x75\x6c\x62")
+
+<Address ef:8e:7e:60:97:a0> <Advertisement  >
+        Advertisement(data=b"\x07\xff\x4c\x00\x12\x02\x00\x02")
