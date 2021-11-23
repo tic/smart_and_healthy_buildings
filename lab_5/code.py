@@ -18,19 +18,11 @@ scan_responses = set()
 DATA_TYPE = 255 # "manufacturer specific"
 MANUFACTURER = b'\x4c\x00' # Apple
 APPLE_DATA_TYPE = 2 # iBeacon data
-
+ATTENUATION = 0.1 # integer in [2, 6] to adjust for environmental circumstances
+CALIBRATION = 1 # value to scale distance measurements
 
 # By providing Advertisement as well we include everything, not just specific advertisements.
 for advertisement in ble.start_scan(ProvideServicesAdvertisement, Advertisement):
-    addr = advertisement.address
-
-    # suppresses repeated advertisement data from devices
-    if advertisement.scan_response and addr not in scan_responses:
-        scan_responses.add(addr)
-    elif not advertisement.scan_response and addr not in found:
-        found.add(addr)
-    else:
-        continue
 
     # get the ad content in bytes
     adbytes = bytes(advertisement)
@@ -45,11 +37,23 @@ for advertisement in ble.start_scan(ProvideServicesAdvertisement, Advertisement)
     if(adbytes[4] != APPLE_DATA_TYPE):
         continue
 
-    MACAddress = ':'.join("{0:0{1}x}".format(b, 2) for b in addr.address_bytes)
+    bg = ("{0:0{1}x}".format(b, 2) for b in advertisement.address.address_bytes)
+    bytes_list = list(bg)
+    bytes_list.reverse()
+    MACAddress = ':'.join(bytes_list)
     TXPower = adbytes[29]
     RSSI = advertisement.rssi
-    print(MACAddress, TXPower, RSSI)
 
-    print()
+    # exponent = float(RSSI - TXPower) / float(10*ATTENUATION)
+    # estimatedDistance = (10**exponent) * CALIBRATION
+
+    raw_exponent = float(RSSI - TXPower) / float(10*ATTENUATION)
+    exponent = (raw_exponent + 2) / -15
+    estimatedDistance = (2.718 ** exponent) * CALIBRATION
+
+    # look for specific calibration sensors
+    # if 'e7' in MACAddress or '74' in MACAddress or '69' in MACAddress:
+    print(MACAddress, TXPower, RSSI, exponent, estimatedDistance)
+
 
 print("scan done")
