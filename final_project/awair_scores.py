@@ -89,31 +89,24 @@ def score_pm25(pm25):
     rating = a*(b ** pm25)
     return round(rating, 2)
 
-# Generate the subscores for the provided air quality components
-def compute_subscores(temperature_c, humidity, co2_ppm, voc_ppb, pm25):
-    # Compute the score for each of the 5 categories
-    temp_subscore = score_temperature(temperature_c)
-    humidity_subscore = score_humidity(humidity)
-    co2_subscore = score_co2(co2_ppm)
-    voc_subscore = score_voc(voc_ppb)
-    pm25_subscore = score_pm25(pm25)
-
-    component_subscores = [
-        temp_subscore,
-        humidity_subscore,
-        co2_subscore,
-        voc_subscore,
-        pm25_subscore
+def compute_component_subscores(temperature_c, humidity, co2_ppm, voc_ppb, pm25):
+    return [
+        score_temperature(temperature_c),
+        score_humidity(humidity),
+        score_co2(co2_ppm),
+        score_voc(voc_ppb),
+        score_pm25(pm25)
     ]
 
+# Generate the subscores for the provided air quality components
+environmental_subscore_breakdown = [0.25, 0.30, 0.05, 0.10, 0.30]
+occupational_subscore_breakdown = [0.05, 0.15, 0.325, 0.325, 0.15]
+def compute_subscores(component_subscores):
     # Compute the subscores
-    environmental_subscore_breakdown = [0.25, 0.30, 0.05, 0.10, 0.30]
     environmental = sum([environmental_subscore_breakdown[i] * component_subscores[i] for i in range(5)])
-
-    occupational_subscore_breakdown = [0.05, 0.15, 0.325, 0.325, 0.15]
     occupational = sum([occupational_subscore_breakdown[i] * component_subscores[i] for i in range(5)])
-
     overall = sum([0.2 * component_subscores[i] for i in range(5)])
+
     # Return the computed subscores
     return [environmental, occupational, overall]
 
@@ -125,4 +118,4 @@ if __name__ == '__main__':
     print(score_co2(2980))
     print(score_voc(1975))
     print(score_pm25(5))
-    print(compute_subscores(24, 40, 2980, 1976, 5))
+    print(compute_subscores(compute_component_subscores(24, 40, 2980, 1976, 5)))
