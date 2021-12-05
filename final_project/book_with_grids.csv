@@ -119,3 +119,5 @@ awair-8532,linklab,awair_element,10s,"41.5,3.08,0.38","Humidity_%,Temperature_Â°
 050623c9,linklab,light_level,30min,"54.18,1.6,3.1","Illumination_lx,Range select,Supply voltage_V,rssi",LL-20,,54.18,1.6,3.1,197
 018a242d,linklab,temp_humid,15min,"52.35,2.83,1.1","Temperature_Â°C,Humidity_%,T-Sensor,rssi",TH-13,,52.35,2.83,1.1,197
 1834365,linklab,contact,25min,"52.35,3.0,1.1","Contact,rssi",DS-28,,52.35,3,1.1,197
+70886b123b81,linklab,awair_element,10s,"33.64,24.37,1.1","Humidity_%,Temperature_¡C,awair_score,co2_ppm,pm2.5__g/m3,voc_ppb",AW-12,,33.64,24.37,1.1,51
+70886b1234a0,linklab,awair_element,10s,"34.05,18.87,1.1","Humidity_%,Temperature_¡C,awair_score,co2_ppm,pm2.5__g/m3,voc_ppb",AW-13,,34.05,18.87,1.1,71
