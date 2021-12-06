@@ -107,14 +107,14 @@ def generate_two_year_plots(year1, year2, filename, show_plot=False):
     years = [year1, year2]
     for i in range(2):
         times = []
-        start_time_range = datetime(years[i], 1, 1, 0, 0, 0)
-        end_time_range = datetime(years[i] + 1, 1, 1, 0, 0, 0)
+        start_time_range = datetime(years[i], 8, 24, 0, 0, 0)
+        end_time_range = datetime(years[i], 12, 18, 0, 0, 0)
         try:
             chunk_start = start_time_range
             while chunk_start < end_time_range:
                 print(chunk_start)
                 times.append(chunk_start)
-                chunk_end = chunk_start + timedelta(minutes=10080)#60)
+                chunk_end = chunk_start + timedelta(minutes=5040)#60)
                 if chunk_end > end_time_range:
                     chunk_end = end_time_range
                 result = score_during_period(chunk_start, chunk_end, device)
@@ -303,6 +303,6 @@ if __name__ == '__main__':
     #     print(err)
     #
     try:
-        generate_two_year_plots(2020, 2021, 'figures/slide11.10080m.resolution.png')
+        generate_two_year_plots(2020, 2021, 'figures/slide11.5040m.resolution.png')
     except Exception as err:
         print(err)
