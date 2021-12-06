@@ -189,16 +189,17 @@ def generate_triple_subplot(start_time_range, end_time_range, minutes_to_jump, f
         try:
             chunk_start = start_time_range
             while chunk_start < end_time_range:
+                print(chunk_start)
                 times.append(chunk_start)
                 chunk_end = chunk_start + timedelta(minutes=minutes_to_jump)
                 if chunk_end > end_time_range:
                     chunk_end = end_time_range
                 result = score_during_period(chunk_start, chunk_end, devices[i])
                 if result is None:
-                    append_scores(i, None, None, None)
+                    append_scores(i, None, None, None, None)
                 else:
                     append_scores(i, *result)
-                    chunk_start = chunk_end
+                chunk_start = chunk_end
         except KeyboardInterrupt:
             pass
 
@@ -221,87 +222,87 @@ def generate_triple_subplot(start_time_range, end_time_range, minutes_to_jump, f
 
 if __name__ == '__main__':
 
-    try:
-        generate_triple_subplot(
-            datetime(2021, 10, 15, 14, 0, 0),
-            datetime(2021, 10, 15, 15, 0, 0),
-            1,
-            'figures/slide15.durationA.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 11, 17, 13, 30, 0),
-            datetime(2021, 11, 17, 15, 0, 0),
-            1,
-            'figures/slide15.durationB.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 11, 22, 11, 30, 0),
-            datetime(2021, 11, 22, 12, 45, 0),
-            1,
-            'figures/slide15.durationC.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 10, 20, 16, 30, 0),
-            datetime(2021, 10, 20, 18, 0, 0),
-            1,
-            'figures/slide15.durationD.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 10, 15, 0, 0, 0),
-            datetime(2021, 10, 16, 0, 0, 0),
-            5,
-            'figures/slide18.durationA.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 11, 17, 0, 0, 0),
-            datetime(2021, 11, 18, 0, 0, 0),
-            5,
-            'figures/slide18.durationB.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 11, 22, 0, 0, 0),
-            datetime(2021, 11, 23, 0, 0, 0),
-            5,
-            'figures/slide18.durationC.png'
-        )
-    except Exception:
-        pass
-
-    try:
-        generate_triple_subplot(
-            datetime(2021, 10, 20, 0, 0, 0),
-            datetime(2021, 10, 21, 0, 0, 0),
-            5,
-            'figures/slide18.durationD.png'
-        )
-    except Exception:
-        pass
-
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 10, 15, 14, 0, 0),
+    #         datetime(2021, 10, 15, 15, 0, 0),
+    #         1,
+    #         'figures/slide15.durationA.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 11, 17, 13, 30, 0),
+    #         datetime(2021, 11, 17, 15, 0, 0),
+    #         1,
+    #         'figures/slide15.durationB.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 11, 22, 11, 30, 0),
+    #         datetime(2021, 11, 22, 12, 45, 0),
+    #         1,
+    #         'figures/slide15.durationC.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 10, 20, 16, 30, 0),
+    #         datetime(2021, 10, 20, 18, 0, 0),
+    #         1,
+    #         'figures/slide15.durationD.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 10, 15, 0, 0, 0),
+    #         datetime(2021, 10, 16, 0, 0, 0),
+    #         5,
+    #         'figures/slide18.durationA.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 11, 17, 0, 0, 0),
+    #         datetime(2021, 11, 18, 0, 0, 0),
+    #         5,
+    #         'figures/slide18.durationB.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 11, 22, 0, 0, 0),
+    #         datetime(2021, 11, 23, 0, 0, 0),
+    #         5,
+    #         'figures/slide18.durationC.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
+    # try:
+    #     generate_triple_subplot(
+    #         datetime(2021, 10, 20, 0, 0, 0),
+    #         datetime(2021, 10, 21, 0, 0, 0),
+    #         5,
+    #         'figures/slide18.durationD.png'
+    #     )
+    # except Exception as err:
+    #     print(err)
+    #
     try:
         generate_two_year_plots(2020, 2021, 'figures/slide11.durationA.png')
-    except Exception:
-        pass
+    except Exception as err:
+        print(err)
