@@ -9,7 +9,7 @@ from awair_scores import environmental_subscore_breakdown, occupational_subscore
 actuations = {
     'temperature': {
         'high': [
-            'Increase air conditioing',
+            'Increase air conditioning',
             'Decrease heating',
             'Open windows, if cooler outside',
             'Reduce outside lighting',
