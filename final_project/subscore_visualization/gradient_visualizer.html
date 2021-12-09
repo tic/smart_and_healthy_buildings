@@ -1,0 +1,312 @@
+<style>
+	body {
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	div#wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	div.sliver {
+		width: 5px;
+		height: 1px;
+		z-index: 10;
+	}
+	
+	div#divider {
+		width: 5px;
+		margin-left: -1px;
+	}
+	
+	div.vline {
+		background: #000000;
+		width: 1px;
+		height: 326px;
+	}
+	
+	div#lines_container {
+		position: relative;
+		left: -1.5px;
+		display: flex;
+		flex-direction: row;
+		z-index: 0;
+	}
+	
+	span.label {
+		position: absolute;
+		font-size: 12px;
+		top: -18px;
+	}
+</style>
+
+<body>
+	<img id="image"/>
+	<div id="divider" class="vline"></div>
+	<div id="lines_container">
+		<span class="label" style="top: -32px; left: 12px; width: 150px;">Component Sub-score</span>
+		<span class="label" style="left: 15px">20</span>
+		<span class="label" style="left: 38px">40</span>
+		<span class="label" style="left: 60px">60</span>
+		<span class="label" style="left: 80px">80</span>
+		<span class="label" style="left: 98px">100</span>
+		<div class="vline" style="position: relative; left: 22px"></div>
+		<div class="vline" style="position: relative; left: 42.5px"></div>
+		<div class="vline" style="position: relative; left: 62.5px"></div>
+		<div class="vline" style="position: relative; left: 82.5px"></div>
+		<div class="vline" style="position: relative; left: 102px"></div>
+	</div>
+	<div id="wrapper"></div>
+</body>
+
+<script>
+	// Component subscore functions
+	function score_temp(temperature_c) {
+		if(temperature_c < 21.5) {
+			if(temperature_c < 1.36) {
+				return 0;
+			}
+			a = 0.0324;
+			b = -1.2626;
+			c = 17.8644;
+			d = -22.007;
+			rating = a*(temperature_c ** 3) + b*(temperature_c ** 2) + c*temperature_c + d
+			if(rating > 100) {
+				return 100;
+			}
+			return rating;
+		}
+
+		if(temperature_c > 21.5) {
+			if(temperature_c > 40.87) {
+				return 0;
+			}
+			a = -0.0315;
+			b = 2.8074;
+			c = -85.3775;
+			d = 950.5292;
+			rating = a*(temperature_c ** 3) + b*(temperature_c ** 2) + c*temperature_c + d
+			if(rating > 100) {
+				return 100;
+			}
+			return rating;
+		}
+		return 100;
+	}
+	
+	function score_humidity(humidity) {
+		 if(humidity > 45.2) {
+			a = -0.00184;
+			b = 0.3792;
+			c = -26.3494;
+			d = 683.7282;
+			rating = a*(humidity ** 3) + b*(humidity ** 2) + c*humidity + d
+			return rating;
+		 }
+			
+
+		if(humidity < 44.8) {
+			if(humidity < 0.1) {
+				return 0;
+			}
+			a = 0.00356;
+			b = -0.2737;
+			c = 7.3135;
+			d = -0.454;
+			rating = a*(humidity ** 3) + b*(humidity ** 2) + c*humidity + d;
+			return rating;
+		}
+
+		return 100;
+	}
+	
+	function score_co2(co2_ppm) {
+		adj_co2 = co2_ppm / 100;
+		if(adj_co2 > 50) {
+			return 0;
+		}
+		a = -0.0022;
+		b = 0.1505;
+		c = -3.9903;
+		d = 99.9546;
+		rating = a*(adj_co2 ** 3) + b*(adj_co2 ** 2) + c*adj_co2 + d;
+		return rating;
+	}
+	
+	function score_voc(voc_ppb) {
+		if(voc_ppb > 60000) {
+			return 0;
+		}
+		a = 100;
+		b = 0.99988;
+		rating = a*(b ** voc_ppb);
+		return rating;
+	}
+	
+	function score_pm25(pm25) {
+		a = 100;
+		b = 0.9925253;
+		rating = a*(b ** pm25);
+		return rating;
+	}
+
+	/////////////////
+	/////////////////
+	/////////////////
+
+	function getRGBString(score) {
+		var red, green;
+		if(score < 60) {
+			red = 255;
+			green = 0;
+		} else if(score < 65) {
+			red = 255;
+			green = 132;
+		} else if(score < 75) {
+			red = 255;
+			green = 188;
+		} else if(score < 80) {
+			red = 255;
+			green = 255;
+		} else {
+			red = 0;
+			green = 255;
+		}
+		return "rgb(" + red + "," + green + ", 0)";
+	}
+	
+	
+	// Generate pm2.5 visualization
+	var imageHeight = 326;
+	var progress = 0;
+	document.getElementById("image").setAttribute("src", "gradient_images/pm25.png");
+	while(progress < imageHeight) {
+		var element = document.createElement("div");
+		var pm25;
+		if(progress < 130.4) {
+			pm25 = 1000 - 925/130*progress;
+		} else if(progress < 286.5) {
+			pm25 = 126.37 - 20/51*progress;
+		} else {
+			pm25 = 125.38 - 15/39*progress;
+		}
+		var score = score_pm25(pm25);
+		element.setAttribute("class", "sliver");
+		element.style.background = getRGBString(score);
+		element.style["margin-left"] = score;
+		
+		progress++;
+		document.getElementById("wrapper").appendChild(element);
+	}
+	//*/
+	
+	/*
+	// Generate voc visualization
+	var imageHeight = 326;
+	var progress = 0;
+	document.getElementById("image").setAttribute("src", "gradient_images/voc.png");
+	while(progress < imageHeight) {
+		var element = document.createElement("div");
+		var voc;
+		if(progress < 72.5) {
+			voc = 60000 - 51668/72*progress;
+		} else if(progress < 163) {
+			voc = 8332 - 4999/89*(progress - 73);
+		} else if(progress < 253.5) {
+			voc = 3333 - 2333/90*(progress - 163);
+		} else if(progress < 300.6) {
+			voc = 1000 - 667/46*(progress - 254);
+			console.log(voc);
+		} else {
+			voc = 333 - 333/24*(progress - 301);
+		}
+		var score = score_voc(voc);
+		element.setAttribute("class", "sliver");
+		element.style.background = getRGBString(score);
+		element.style["margin-left"] = score;
+		
+		progress++;
+		document.getElementById("wrapper").appendChild(element);
+	}
+	//*/
+	
+	/*
+	// Generate co2 visualization
+	var imageHeight = 326;
+	var progress = 0;
+	document.getElementById("image").setAttribute("src", "gradient_images/co2.png");
+	while(progress < imageHeight) {
+		var element = document.createElement("div");
+		var humidity = 5000 - 5000/imageHeight*progress;
+		var score = score_co2(humidity);
+		element.setAttribute("class", "sliver");
+		element.style.background = getRGBString(score);
+		element.style["margin-left"] = score;
+		
+		progress++;
+		document.getElementById("wrapper").appendChild(element);
+	}
+	//*/
+	
+	
+	/*
+	// Generate humidity visualization
+	var imageHeight = 326;
+	var progress = 0;
+	document.getElementById("image").setAttribute("src", "gradient_images/humidity.png");
+	while(progress < imageHeight) {
+		var element = document.createElement("div");
+		var humidity = 100 - 100/imageHeight*progress;
+		var score = score_humidity(humidity);
+		element.setAttribute("class", "sliver");
+		element.style.background = getRGBString(score);
+		element.style["margin-left"] = score;
+		
+		progress++;
+		document.getElementById("wrapper").appendChild(element);
+	}
+	//*/
+	
+	/*
+	// Generate temperature visualization
+	var imageHeight = 326;
+	var progress = 0;
+	document.getElementById("image").setAttribute("src", "gradient_images/temperature.png");
+	while(progress < imageHeight) {
+		var element = document.createElement("div");
+		var degrees = 35 - 28/326*progress;
+		var score = score_temp(degrees);
+		element.setAttribute("class", "sliver");
+		element.style.background = getRGBString(score);
+		element.style["margin-left"] = score;
+		
+		progress++;
+		document.getElementById("wrapper").appendChild(element);
+	}
+	//*/
+	
+	
+	/*
+	// Create a simple green->yellow->red interpolation
+	var red = 0;
+	while(red < 255) {
+		element = document.createElement("div");
+		element.style.background = "rgb(" + red + ", 255, 0)"
+		red += 2;
+		document.body.appendChild(element);
+	}
+	
+	var green = 255;
+	while(green > 0) {
+		element = document.createElement("div");
+		element.style.background = "rgb(255," + green + ", 0)"
+		green--;
+		document.body.appendChild(element);
+	}
+	//*/
+	
+</script>
